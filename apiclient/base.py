@@ -1,7 +1,7 @@
-import json
-
 from urllib3 import connection_from_url
 from urllib import urlencode
+
+from .serializers import get_serializer
 
 
 class APIClient(object):
@@ -18,14 +18,14 @@ class APIClient(object):
         return (method, self.BASE_URL + path, fields)
 
     def _handle_response(self, response):
-        content_type = response.headers.get('content-type')
-        if 'text/javascript' in content_type:
-            return json.loads(response.data)
-        return response.data
+        serializer = get_serializer(response.headers.get('content-type'))
+        return serializer.loads(response.data)
 
     def _request(self, method, path, fields=None):
+        request_args = self._compose_url(method, path, fields)
+
         self.rate_limit_lock and self.rate_limit_lock.acquire()
-        r = self.connection_pool.request(*self._compose_url(method, path, fields))
+        r = self.connection_pool.request(*request_args)
 
         return self._handle_response(r)
 
