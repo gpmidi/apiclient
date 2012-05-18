@@ -34,7 +34,7 @@ def get_serializer(content_type):
     if content_type is not None:
         for mime, wrapper in wrappers.iteritems():
             if mime in content_type.lower():
-                return wrapper
+                return wrapper()
 
     # Fallback
-    return TextSerializer
+    return TextSerializer()
