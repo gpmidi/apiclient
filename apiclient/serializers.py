@@ -29,6 +29,7 @@ def get_serializer(content_type):
     """
     wrappers = {
         'application/json': JSONSerializer,
+        'text/javascript': JSONSerializer,
         'text/plain': TextSerializer,
     }
     if content_type is not None:
