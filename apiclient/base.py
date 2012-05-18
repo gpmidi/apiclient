@@ -18,7 +18,10 @@ class APIClient(object):
         return (method, self.BASE_URL + path, fields)
 
     def _handle_response(self, response):
-        return json.loads(response.data)
+        content_type = response.headers.get('content-type')
+        if 'text/javascript' in content_type:
+            return json.loads(response.data)
+        return response.data
 
     def _request(self, method, path, fields=None):
         self.rate_limit_lock and self.rate_limit_lock.acquire()
