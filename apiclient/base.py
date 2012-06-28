@@ -1,3 +1,5 @@
+import warnings
+
 from urllib3 import connection_from_url
 from urllib import urlencode
 
@@ -40,6 +42,11 @@ class APIClient(object):
         return self._handle_response(r)
 
     def call(self, path, **fields):
+        warnings.warn('APIClient call() is deprecated; use get() instead.',
+                      PendingDeprecationWarning)
+        return self.get(path, **fields)
+
+    def get(self, path, **fields):
         return self._request('GET', path, fields=fields)
 
 
