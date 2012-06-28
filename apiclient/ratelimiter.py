@@ -14,6 +14,16 @@ class RateLimiter(object):
 
         self._reset_window()
 
+    def __getstate__(self):
+        # Lock is not pickeable, so we remove it
+        state = self.__dict__.copy()
+        del state['lock']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.lock = Lock()
+
     def _reset_window(self):
         self.window_num = 0
         self.window_time = time.time()

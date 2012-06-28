@@ -11,6 +11,16 @@ class APIClient(object):
         self.rate_limit_lock = rate_limit_lock
         self.connection_pool = self._make_connection_pool(self.BASE_URL)
 
+    def __getstate__(self):
+        # ConnectionPool is not pickeable, so we remove it
+        state = self.__dict__.copy()
+        del state['connection_pool']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self.connection_pool = self._make_connection_pool(self.BASE_URL)
+
     def _make_connection_pool(self, url):
         return connection_from_url(url)
 
@@ -36,8 +46,8 @@ class APIClient(object):
 class APIClient_SharedSecret(APIClient):
     API_KEY_PARAM = 'key'
 
-    def __init__(self, api_key=None, *args, **kw):
-        super(APIClient_SharedSecret, self).__init__(*args, **kw)
+    def __init__(self, api_key=None, *args, **kwargs):
+        super(APIClient_SharedSecret, self).__init__(*args, **kwargs)
         self.api_key = api_key
 
     def _compose_url(self, method, path, fields=None):
