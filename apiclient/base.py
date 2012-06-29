@@ -46,8 +46,20 @@ class APIClient(object):
                       PendingDeprecationWarning)
         return self.get(path, **fields)
 
+    def delete(self, path, **fields):
+        return self._request('DELETE', path, fields=fields)
+
     def get(self, path, **fields):
         return self._request('GET', path, fields=fields)
+
+    def patch(self, path, **fields):
+        return self._request('PATCH', path, fields=fields)
+
+    def post(self, path, **fields):
+        return self._request('POST', path, fields=fields)
+
+    def put(self, path, **fields):
+        return self._request('PUT', path, fields=fields)
 
 
 class APIClient_SharedSecret(APIClient):
