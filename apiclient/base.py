@@ -26,7 +26,7 @@ class APIClient(object):
     def _make_connection_pool(self, url):
         return connection_from_url(url)
 
-    def _compose_url(self, method, url, fields=None):
+    def _compose_url(self, method, path, fields=None):
         return (method, self.BASE_URL + path, fields)
 
     def _handle_response(self, response):
