@@ -8,10 +8,11 @@ from .serializers import get_serializer
 
 class APIClient(object):
     BASE_URL = 'http://localhost:5000/'
+    TIMEOUT = 1
 
     def __init__(self, rate_limit_lock=None):
         self.rate_limit_lock = rate_limit_lock
-        self.connection_pool = self._make_connection_pool(self.BASE_URL)
+        self.connection_pool = self._make_connection_pool(self.BASE_URL, self.TIMEOUT)
 
     def __getstate__(self):
         # ConnectionPool is not pickeable, so we remove it
@@ -21,10 +22,10 @@ class APIClient(object):
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.connection_pool = self._make_connection_pool(self.BASE_URL)
+        self.connection_pool = self._make_connection_pool(self.BASE_URL, self.TIMEOUT)
 
-    def _make_connection_pool(self, url):
-        return connection_from_url(url)
+    def _make_connection_pool(self, url, timeout=1):
+        return connection_from_url(url, timeout=timeout)
 
     def _compose_url(self, method, path, fields=None):
         return (method, self.BASE_URL + path, fields)
