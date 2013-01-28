@@ -40,6 +40,6 @@ setup(name = 'apiclient',
       requires = requirements,
       tests_require = tests_requirements,
       install_requires = [
-                          "python-libmemcached",
+                          "python-memcached",
                           ],
       )
